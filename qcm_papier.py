@@ -1,6 +1,3 @@
-    """_summary_
-    """
-
 import os
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename
@@ -8,10 +5,18 @@ from tkinter.filedialog import askopenfilename
 from gest_zip import extraction
 from settings import *
 from gest_pdf import *
+from settings import *
 
-PREMIERE_PAGE = False
-REMPLACE_PREM = False
+#0 : suppression première page
+#1 : première page d'originate
+#2 : remplacement première page
+premiere_page = 0
+nb_pdf = 0
+page_dep = 1
+
+
 directory = os.getcwd()
+file_prem_page = None
 
 if (
     messagebox.askyesno(
@@ -19,7 +24,8 @@ if (
     )
     is True
 ):
-    PREMIERE_PAGE = True
+    premiere_page = 1
+    page_dep = 0
     if (
         messagebox.askyesno(
             "Remplacement de la première page",
@@ -28,12 +34,11 @@ if (
         )
         is True
     ):
-        REMPLACE_PREM = True
-        prem_page = askopenfilename(initialdir=directory)
-        directory2 = os.path.split(prem_page)[0]
+        premiere_page = 2
+        file_prem_page = askopenfilename(initialdir=directory)
+        directory2 = os.path.split(file_prem_page)[0]
 
-NB_PDF = 0
-PAGE_DEP = 0
+
 
 if os.path.exists("Result.pdf"):
     os.remove("Result.pdf")
@@ -42,7 +47,7 @@ filename = askopenfilename(initialdir=directory,title="Choisir le fichier zip à
 directory = os.path.split(filename)[0]
 filename =os.path.split(filename)[1]
 
-NB_PDF = extraction(filename, directory, LISTES_EXTRACT)
+nb_pdf = extraction(filename, directory, LISTES_EXTRACT)
 
 a, b = trouve_max(directory)
 
@@ -55,45 +60,17 @@ if not egal:
     "Les grilles n'ont pas toutes le même nombre"
     " pages. Cela peut poser des problèmes.",
     )
-
+    
+#Le nombre de page max du sujet doit être pair
+#Si sans enlever la première page on est impair
+#alors il faut ajouter une page sinon il faut en enlever une
 if maxs % 2 != 0:
-    if not PREMIERE_PAGE:
-        maxs -= 1
-    else:
+    if premiere_page != 0:
         maxs += 1
+    else:
+        maxs -= 1
 
-if not PREMIERE_PAGE:
-    PAGE_DEP = 1
-
-pdf_merger = PdfMerger()
-for i in range(NB_PDF // 2):
-    with open(os.path.join(directory, "Result" + str(i + 1) + ".pdf"), "wb") as f:
-        output = PdfWriter()
-        if REMPLACE_PREM:
-            with open(prem_page, "rb") as pdfFileObjPremPage:
-                pdf_prem_page = PdfReader(pdfFileObjPremPage)
-                output.addPage(pdf_prem_page.getPage(0))
-                output.write(f)
-            PAGE_DEP = 1
-        with open(os.path.join(directory, liste_sujet[i]), "rb") as pdfFileObjSujet:
-            pdf = PdfReader(pdfFileObjSujet)
-            for j in range(PAGE_DEP, len(pdf.pages)):
-                output.add_page(pdf.pages[j])
-            for k in range(0, maxs - len(output.pages)):
-                output.add_blank_page
-            output.write(f)
-        j = 0
-        with open(os.path.join(directory, Liste_Grille[i]), "rb") as pdfFileObjGrille:
-            pdf = PdfReader(pdfFileObjGrille)
-            for j in range(len(pdf.pages)):
-                output.add_page(pdf.pages[j])
-                output.add_blank_page
-            for k in range(1, (maxg * 2) - (2 * len(pdf.pages)) + 1):
-                output.add_blank_page
-            output.write(f)
-    pdf_merger.append(os.path.join(directory, "Result" + str(i + 1) + ".pdf"))
-with open(os.path.join(directory, "Result.pdf"), "wb") as output_file:
-    pdf_merger.write(output_file)
+traite_fichier(maxs, maxg, directory, nb_pdf, premiere_page, page_dep, file_prem_page)
 
 messagebox.showinfo(
     "Fin du travail",
