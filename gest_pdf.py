@@ -44,7 +44,6 @@ def traite_fichier(maxs, maxg, chemin, nb_pdf, prem_page, page_depart, file_prem
                     output.add_page(pdf.pages[j])
                 for k in range(0, maxs - len(output.pages)):
                     output.add_blank_page()
-                output.write(f)
             j = 0
             with open(os.path.join(chemin, LISTE_GRILLES[i]), "rb") as pdfFileObjGrille:
                 pdf = PdfReader(pdfFileObjGrille)
