@@ -8,7 +8,7 @@ from gest_pdf import *
 from settings import *
 
 #0 : suppression première page
-#1 : première page d'originate
+#1 : première page d'origine
 #2 : remplacement première page
 premiere_page = 0
 nb_pdf = 0
