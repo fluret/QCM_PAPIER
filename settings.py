@@ -26,3 +26,9 @@ LISTE_GRILLES = [
     "GrilleF.pdf",
 ]
 
+LISTE_SUPPRESSION = [
+    "Grille",
+    "Sujet",
+    "Result"
+]
+

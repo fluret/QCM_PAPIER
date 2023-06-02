@@ -1,6 +1,6 @@
 import os
 from pypdf import PdfWriter, PdfReader, PdfMerger
-from tools import *
+from tools import max_et_egalite
 from settings import *
 
 def trouve_max(chemin):
@@ -32,7 +32,7 @@ def traite_fichier(maxs, maxg, chemin, nb_pdf, prem_page, page_depart, file_prem
             if prem_page == 2:
                 with open(file_prem_page, "rb") as pdfFileObjPremPage:
                     pdf_prem_page = PdfReader(pdfFileObjPremPage)
-                    output.addPage(pdf_prem_page.getPage(0))
+                    output.add_page(pdf_prem_page.pages[0])
                     output.write(f)
             #Si on conserve la première page (remplacer ou non) page_depart est à 0
             #dans le cas contraire il est à 1. On ajoute toutes les pages à partir 
@@ -56,3 +56,6 @@ def traite_fichier(maxs, maxg, chemin, nb_pdf, prem_page, page_depart, file_prem
         pdf_merger.append(os.path.join(chemin, "Result" + str(i + 1) + ".pdf"))
     with open(os.path.join(chemin, "Result.pdf"), "wb") as output_file:
         pdf_merger.write(output_file)
+    pdf_merger.close()
+    output.close()
+    

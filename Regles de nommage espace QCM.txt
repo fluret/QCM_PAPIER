@@ -4,10 +4,10 @@ NOM_MATIERE_ANNEE_SEMESTRE_SESSSION_MODULE
 
 Le zip final de moodle remplace tous les espaces par "_" On va donc se baser la dessus pour récupérer les informations de nommage de note PDF final. Dans la pratique nous n'avons besoin que des deux premières valeurs.
 
-La seule contrainte est de ne pas utiliser d'espace pour ces deux valeurs. Pour le nom de la matière j'ai arbitrairement décidé de remplacer les espaces par des "*". Si on respecte cette règle, le programme pourra nommer de manière automatique le fichier final. Il ne restera plus qu'à l'ennoyer à la reprographie.
+La seule contrainte est de ne pas utiliser d'espace pour ces deux valeurs. Pour le nom de la matière j'ai arbitrairement décidé de remplacer les espaces par des "$". Si on respecte cette règle, le programme pourra nommer de manière automatique le fichier final. Il ne restera plus qu'à l'ennoyer à la reprographie.
 
 Voici un exeple de nom d'espace :
 
-OLA_Introduction*a*la*gestion_22/23_S1_1_module3
+OLA_Introduction$a$la$gestion_2022 2023_S1_1_module3
 
 Il possible d'utiliser des espaces dans les autres parties, pour le programme il faut juste respecter la position des deux première valeurs.
